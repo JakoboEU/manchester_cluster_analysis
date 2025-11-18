@@ -1,0 +1,213 @@
+---
+title: "Indicator species by cluster"
+output: html_notebook
+---
+
+# Set Up
+## Load Libs
+```{r}
+library(indicspecies)
+library(dplyr)
+library(tidyverse)
+```
+
+## Constants
+```{r}
+SOME_SEED = 7442
+LINES_TO_GUESS_TYPES = 1000
+INPUT_DIR = 'input'
+```
+
+## Helper functions
+```{r}
+read_input_csv = function(filename) {
+  read_csv(paste(INPUT_DIR, filename, sep = '/'), guess_max = LINES_TO_GUESS_TYPES)
+}
+
+to_presence_dataframe = function(presence_data) {
+  presence_data %>% dplyr::mutate(present = T) %>% pivot_wider(id_cols = title, names_from = species, values_from = present, values_fill = F)
+}
+
+include_sites_with_no_presence_record = function(presence_df, all_plot_titles) {
+  sites_with_no_records = data.frame(title = data.frame(title = all_plot_titles) %>% filter(!(title %in% presence_df$title)) %>% dplyr::select(title))
+  species_names = colnames(presence_df)[-1]
+  for(species_name in species_names) {
+    sites_with_no_records[species_name] = F
+  }
+  
+  rbind(presence_df, sites_with_no_records)
+}
+
+to_indicator_species_matrix = function(per_site) {
+  per_site %>% dplyr::select(-title) %>% mutate(across(everything(), as.integer)) %>% as.matrix
+}
+```
+
+
+# Clusters
+## Plant and Insect
+```{r}
+clusters = read_input_csv('insect-plant-clusters.csv') %>%
+  pivot_longer(!k, names_to = "title", values_to = "col2") %>% 
+  pivot_wider(names_from = "k", values_from = "col2")
+clusters
+```
+
+# Species Presence
+```{r}
+insects_per_site = read_input_csv('insect-presence.csv') %>% 
+  to_presence_dataframe() %>% 
+  include_sites_with_no_presence_record(clusters$title) %>% 
+  arrange(title)
+insects_per_site
+```
+
+```{r}
+plants_per_site = read_input_csv('plant-presence.csv') %>% 
+  to_presence_dataframe() %>% 
+  include_sites_with_no_presence_record(clusters$title) %>% 
+  arrange(title)
+plants_per_site
+```
+
+# Insect Indicators
+## Insects (k = 3)
+```{r}
+insects_per_site_matrix = to_indicator_species_matrix(insects_per_site)
+plants_per_site_matrix = to_indicator_species_matrix(plants_per_site)
+
+indicator_species = function(species_matrix, cluster_assignment) {
+  set.seed(SOME_SEED)
+  cluster_fact = factor(cluster_assignment)
+  multipatt(species_matrix, cluster_fact, control = how(nperm=999))
+}
+
+insect_indicator_species = function(cluster_assignment) {indicator_species(insects_per_site_matrix, cluster_assignment)}
+plant_indicator_species = function(cluster_assignment) {indicator_species(plants_per_site_matrix, cluster_assignment)}
+
+insects_k3 = insect_indicator_species(clusters$`3`)
+summary(insects_k3)
+```
+
+```{r}
+as.data.frame(insects_k3$sign)
+```
+
+```{r}
+indicator_species_stats = function(k, indicator_results) {
+  not_generalist_species = nrow(indicator_results$sign[!is.na(indicator_results$sign$p.value),])
+  
+  data.frame(
+    k = k,
+    number_not_generalist = not_generalist_species,
+    proportion_not_generalist = not_generalist_species / nrow(indicator_results$sign),
+    average_p_value = mean(indicator_results$sign$p.value, na.rm = T)
+  )
+}
+summary_3 = indicator_species_stats(3, insects_k3)
+summary_3
+```
+
+## Insects (k = 6)
+```{r}
+insects_k6 = insect_indicator_species(clusters$`6`)
+summary(insects_k6)
+```
+
+```{r}
+as.data.frame(insects_k6$sign)
+```
+
+```{r}
+summary_6 = indicator_species_stats(6, insects_k6)
+summary_6
+```
+
+## Insects (k = 8)
+```{r}
+insects_k8 = insect_indicator_species(clusters$`8`)
+summary(insects_k8)
+```
+
+```{r}
+as.data.frame(insects_k8$sign)
+```
+
+```{r}
+summary_8 = indicator_species_stats(8, insects_k8)
+summary_8
+```
+
+# Insect Final Results
+```{r}
+bind_rows(summary_3, summary_6, summary_8)
+```
+
+Generalists
+```{r}
+insects_k8$sign[is.na(insects_k8$sign$p.value),]
+```
+
+```{r}
+summary(insects_k8)
+```
+
+# Plant Indicators
+## Plants (k = 3)
+```{r}
+plants_k3 = plant_indicator_species(clusters$`3`)
+summary(plants_k3)
+```
+
+```{r}
+as.data.frame(plants_k3$sign)
+```
+
+```{r}
+plants_summary_3 = indicator_species_stats(3, plants_k3)
+plants_summary_3
+```
+
+## Insects (k = 6)
+```{r}
+plants_k6 = plant_indicator_species(clusters$`6`)
+summary(plants_k6)
+```
+
+```{r}
+as.data.frame(plants_k6$sign)
+```
+
+```{r}
+plants_summary_6 = indicator_species_stats(6, plants_k6)
+plants_summary_6
+```
+
+## Insects (k = 8)
+```{r}
+plants_k8 = plant_indicator_species(clusters$`8`)
+summary(plants_k8)
+```
+
+```{r}
+as.data.frame(plants_k8$sign)
+```
+
+```{r}
+plants_summary_8 = indicator_species_stats(8, plants_k8)
+plants_summary_8
+```
+
+# Plant Final Results
+```{r}
+bind_rows(plants_summary_3, plants_summary_6, plants_summary_8)
+```
+
+Generalists
+```{r}
+plants_k8$sign[is.na(plants_k8$sign$p.value),]
+```
+
+```{r}
+summary(plants_k8)
+```
