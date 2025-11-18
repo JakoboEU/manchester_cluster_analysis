@@ -85,7 +85,7 @@ birds_per_site
 ```
 
 # Insect Indicators
-## Insects (k = 3)
+## (k = 3)
 ```{r}
 insects_per_site_matrix = to_indicator_species_matrix(insects_per_site)
 plants_per_site_matrix = to_indicator_species_matrix(plants_per_site)
@@ -123,40 +123,17 @@ indicator_species_stats = function(k, indicator_results) {
 summary_3 = indicator_species_stats(3, insects_k3)
 summary_3
 ```
-
-## Insects (k = 6)
-```{r}
-insects_k6 = insect_indicator_species(plant_and_insect_clusters$`6`)
-summary(insects_k6)
-```
-
-```{r}
-as.data.frame(insects_k6$sign)
-```
-
-```{r}
-summary_6 = indicator_species_stats(6, insects_k6)
-summary_6
-```
-
-## Insects (k = 8)
-```{r}
-insects_k8 = insect_indicator_species(plant_and_insect_clusters$`8`)
-summary(insects_k8)
-```
-
-```{r}
-as.data.frame(insects_k8$sign)
-```
-
-```{r}
-summary_8 = indicator_species_stats(8, insects_k8)
-summary_8
-```
-
 # Insect Final Results
 ```{r}
-bind_rows(summary_3, summary_6, summary_8)
+bind_rows(
+  summary_3,
+  indicator_species_stats(6, plant_indicator_species(plant_and_insect_clusters$`6`)),
+  indicator_species_stats(8, plant_indicator_species(plant_and_insect_clusters$`8`)),
+  indicator_species_stats(15, plant_indicator_species(plant_and_insect_clusters$`15`)))
+```
+
+```{r}
+insects_k8 = insect_indicator_species(plant_and_insect_clusters$`8`)
 ```
 
 Generalists
@@ -169,54 +146,17 @@ summary(insects_k8)
 ```
 
 # Plant Indicators
-## Plants (k = 3)
-```{r}
-plants_k3 = plant_indicator_species(plant_and_insect_clusters$`3`)
-summary(plants_k3)
-```
 
 ```{r}
-as.data.frame(plants_k3$sign)
+bind_rows(
+  indicator_species_stats(3, plant_indicator_species(plant_and_insect_clusters$`3`)),
+  indicator_species_stats(6, plant_indicator_species(plant_and_insect_clusters$`6`)),
+  indicator_species_stats(8, plant_indicator_species(plant_and_insect_clusters$`8`)),
+  indicator_species_stats(15, plant_indicator_species(plant_and_insect_clusters$`15`)))
 ```
 
-```{r}
-plants_summary_3 = indicator_species_stats(3, plants_k3)
-plants_summary_3
-```
-
-## Insects (k = 6)
-```{r}
-plants_k6 = plant_indicator_species(plant_and_insect_clusters$`6`)
-summary(plants_k6)
-```
-
-```{r}
-as.data.frame(plants_k6$sign)
-```
-
-```{r}
-plants_summary_6 = indicator_species_stats(6, plants_k6)
-plants_summary_6
-```
-
-## Insects (k = 8)
 ```{r}
 plants_k8 = plant_indicator_species(plant_and_insect_clusters$`8`)
-summary(plants_k8)
-```
-
-```{r}
-as.data.frame(plants_k8$sign)
-```
-
-```{r}
-plants_summary_8 = indicator_species_stats(8, plants_k8)
-plants_summary_8
-```
-
-# Plant Final Results
-```{r}
-bind_rows(plants_summary_3, plants_summary_6, plants_summary_8)
 ```
 
 Generalists
@@ -229,54 +169,18 @@ summary(plants_k8)
 ```
 
 # Bird Indicators
-## Birds (k = 3)
 ```{r}
-birds_k3 = bird_indicator_species(bird_clusters$`3`)
-summary(birds_k3)
+bind_rows(
+  indicator_species_stats(3, bird_indicator_species(bird_clusters$`3`)), 
+  indicator_species_stats(6, bird_indicator_species(bird_clusters$`6`)), 
+  indicator_species_stats(7, bird_indicator_species(bird_clusters$`7`)), 
+  indicator_species_stats(7, bird_indicator_species(bird_clusters$`7`)), 
+  indicator_species_stats(9, bird_indicator_species(bird_clusters$`9`)), 
+  indicator_species_stats(15, bird_indicator_species(bird_clusters$`15`))
+)
 ```
-
 ```{r}
-as.data.frame(birds_k3$sign)
-```
-
-```{r}
-bird_summary_3 = indicator_species_stats(3, birds_k3)
-bird_summary_3
-```
-
-## Insects (k = 6)
-```{r}
-birds_k6 = bird_indicator_species(bird_clusters$`6`)
-summary(birds_k6)
-```
-
-```{r}
-as.data.frame(birds_k6$sign)
-```
-
-```{r}
-bird_summary_6 = indicator_species_stats(6, birds_k6)
-bird_summary_6
-```
-
-## Insects (k = 8)
-```{r}
-birds_k8 = bird_indicator_species(bird_clusters$`8`)
-summary(birds_k8)
-```
-
-```{r}
-as.data.frame(birds_k8$sign)
-```
-
-```{r}
-bird_summary_8 = indicator_species_stats(8, birds_k8)
-bird_summary_8
-```
-
-# Bird Final Results
-```{r}
-bind_rows(bird_summary_3, bird_summary_6, bird_summary_8)
+birds_k8 = plant_indicator_species(bird_clusters$`8`)
 ```
 
 Generalists
