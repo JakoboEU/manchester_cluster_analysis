@@ -43,7 +43,6 @@ to_indicator_species_matrix = function(per_site) {
 }
 ```
 
-
 # Clusters
 ## Plant and Insect
 ```{r}
@@ -52,6 +51,7 @@ plant_and_insect_clusters = read_input_csv('insect-plant-clusters.csv') %>%
   pivot_wider(names_from = "k", values_from = "col2")
 plant_and_insect_clusters
 ```
+
 ```{r}
 bird_clusters = read_input_csv('bird-clusters.csv') %>%
   pivot_longer(!k, names_to = "title", values_to = "col2") %>% 
@@ -123,13 +123,16 @@ indicator_species_stats = function(k, indicator_results) {
 summary_3 = indicator_species_stats(3, insects_k3)
 summary_3
 ```
-# Insect Final Results
+
+# Insect Results
 ```{r}
 bind_rows(
   summary_3,
-  indicator_species_stats(6, plant_indicator_species(plant_and_insect_clusters$`6`)),
-  indicator_species_stats(8, plant_indicator_species(plant_and_insect_clusters$`8`)),
-  indicator_species_stats(15, plant_indicator_species(plant_and_insect_clusters$`15`)))
+  indicator_species_stats(6, insect_indicator_species(plant_and_insect_clusters$`6`)),
+  indicator_species_stats(8, insect_indicator_species(plant_and_insect_clusters$`8`)),
+  indicator_species_stats(9, insect_indicator_species(plant_and_insect_clusters$`9`)),
+  indicator_species_stats(12, insect_indicator_species(plant_and_insect_clusters$`12`)),
+  indicator_species_stats(15, insect_indicator_species(plant_and_insect_clusters$`15`)))
 ```
 
 ```{r}
@@ -146,12 +149,13 @@ summary(insects_k8)
 ```
 
 # Plant Indicators
-
 ```{r}
 bind_rows(
   indicator_species_stats(3, plant_indicator_species(plant_and_insect_clusters$`3`)),
   indicator_species_stats(6, plant_indicator_species(plant_and_insect_clusters$`6`)),
   indicator_species_stats(8, plant_indicator_species(plant_and_insect_clusters$`8`)),
+  indicator_species_stats(9, plant_indicator_species(plant_and_insect_clusters$`9`)),
+  indicator_species_stats(12, plant_indicator_species(plant_and_insect_clusters$`12`)),
   indicator_species_stats(15, plant_indicator_species(plant_and_insect_clusters$`15`)))
 ```
 
@@ -172,13 +176,15 @@ summary(plants_k8)
 ```{r}
 bind_rows(
   indicator_species_stats(3, bird_indicator_species(bird_clusters$`3`)), 
+  indicator_species_stats(4, bird_indicator_species(bird_clusters$`4`)), 
   indicator_species_stats(6, bird_indicator_species(bird_clusters$`6`)), 
   indicator_species_stats(7, bird_indicator_species(bird_clusters$`7`)), 
-  indicator_species_stats(7, bird_indicator_species(bird_clusters$`7`)), 
+  indicator_species_stats(8, bird_indicator_species(bird_clusters$`8`)), 
   indicator_species_stats(9, bird_indicator_species(bird_clusters$`9`)), 
-  indicator_species_stats(15, bird_indicator_species(bird_clusters$`15`))
-)
+  indicator_species_stats(12, bird_indicator_species(bird_clusters$`12`)),
+  indicator_species_stats(15, bird_indicator_species(bird_clusters$`15`)))
 ```
+
 ```{r}
 birds_k8 = plant_indicator_species(bird_clusters$`8`)
 ```
