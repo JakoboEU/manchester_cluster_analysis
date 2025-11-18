@@ -47,17 +47,23 @@ to_indicator_species_matrix = function(per_site) {
 # Clusters
 ## Plant and Insect
 ```{r}
-clusters = read_input_csv('insect-plant-clusters.csv') %>%
+plant_and_insect_clusters = read_input_csv('insect-plant-clusters.csv') %>%
   pivot_longer(!k, names_to = "title", values_to = "col2") %>% 
   pivot_wider(names_from = "k", values_from = "col2")
-clusters
+plant_and_insect_clusters
+```
+```{r}
+bird_clusters = read_input_csv('bird-clusters.csv') %>%
+  pivot_longer(!k, names_to = "title", values_to = "col2") %>% 
+  pivot_wider(names_from = "k", values_from = "col2")
+bird_clusters
 ```
 
 # Species Presence
 ```{r}
 insects_per_site = read_input_csv('insect-presence.csv') %>% 
   to_presence_dataframe() %>% 
-  include_sites_with_no_presence_record(clusters$title) %>% 
+  include_sites_with_no_presence_record(plant_and_insect_clusters$title) %>% 
   arrange(title)
 insects_per_site
 ```
@@ -65,9 +71,17 @@ insects_per_site
 ```{r}
 plants_per_site = read_input_csv('plant-presence.csv') %>% 
   to_presence_dataframe() %>% 
-  include_sites_with_no_presence_record(clusters$title) %>% 
+  include_sites_with_no_presence_record(plant_and_insect_clusters$title) %>% 
   arrange(title)
 plants_per_site
+```
+
+```{r}
+birds_per_site = read_input_csv('bird-presence.csv') %>% 
+  to_presence_dataframe() %>% 
+  include_sites_with_no_presence_record(bird_clusters$title) %>% 
+  arrange(title)
+birds_per_site
 ```
 
 # Insect Indicators
@@ -75,6 +89,7 @@ plants_per_site
 ```{r}
 insects_per_site_matrix = to_indicator_species_matrix(insects_per_site)
 plants_per_site_matrix = to_indicator_species_matrix(plants_per_site)
+birds_per_site_matrix = to_indicator_species_matrix(birds_per_site)
 
 indicator_species = function(species_matrix, cluster_assignment) {
   set.seed(SOME_SEED)
@@ -84,8 +99,9 @@ indicator_species = function(species_matrix, cluster_assignment) {
 
 insect_indicator_species = function(cluster_assignment) {indicator_species(insects_per_site_matrix, cluster_assignment)}
 plant_indicator_species = function(cluster_assignment) {indicator_species(plants_per_site_matrix, cluster_assignment)}
+bird_indicator_species = function(cluster_assignment) {indicator_species(birds_per_site_matrix, cluster_assignment)}
 
-insects_k3 = insect_indicator_species(clusters$`3`)
+insects_k3 = insect_indicator_species(plant_and_insect_clusters$`3`)
 summary(insects_k3)
 ```
 
@@ -110,7 +126,7 @@ summary_3
 
 ## Insects (k = 6)
 ```{r}
-insects_k6 = insect_indicator_species(clusters$`6`)
+insects_k6 = insect_indicator_species(plant_and_insect_clusters$`6`)
 summary(insects_k6)
 ```
 
@@ -125,7 +141,7 @@ summary_6
 
 ## Insects (k = 8)
 ```{r}
-insects_k8 = insect_indicator_species(clusters$`8`)
+insects_k8 = insect_indicator_species(plant_and_insect_clusters$`8`)
 summary(insects_k8)
 ```
 
@@ -155,7 +171,7 @@ summary(insects_k8)
 # Plant Indicators
 ## Plants (k = 3)
 ```{r}
-plants_k3 = plant_indicator_species(clusters$`3`)
+plants_k3 = plant_indicator_species(plant_and_insect_clusters$`3`)
 summary(plants_k3)
 ```
 
@@ -170,7 +186,7 @@ plants_summary_3
 
 ## Insects (k = 6)
 ```{r}
-plants_k6 = plant_indicator_species(clusters$`6`)
+plants_k6 = plant_indicator_species(plant_and_insect_clusters$`6`)
 summary(plants_k6)
 ```
 
@@ -185,7 +201,7 @@ plants_summary_6
 
 ## Insects (k = 8)
 ```{r}
-plants_k8 = plant_indicator_species(clusters$`8`)
+plants_k8 = plant_indicator_species(plant_and_insect_clusters$`8`)
 summary(plants_k8)
 ```
 
@@ -210,4 +226,64 @@ plants_k8$sign[is.na(plants_k8$sign$p.value),]
 
 ```{r}
 summary(plants_k8)
+```
+
+# Bird Indicators
+## Birds (k = 3)
+```{r}
+birds_k3 = bird_indicator_species(bird_clusters$`3`)
+summary(birds_k3)
+```
+
+```{r}
+as.data.frame(birds_k3$sign)
+```
+
+```{r}
+bird_summary_3 = indicator_species_stats(3, birds_k3)
+bird_summary_3
+```
+
+## Insects (k = 6)
+```{r}
+birds_k6 = bird_indicator_species(bird_clusters$`6`)
+summary(birds_k6)
+```
+
+```{r}
+as.data.frame(birds_k6$sign)
+```
+
+```{r}
+bird_summary_6 = indicator_species_stats(6, birds_k6)
+bird_summary_6
+```
+
+## Insects (k = 8)
+```{r}
+birds_k8 = bird_indicator_species(bird_clusters$`8`)
+summary(birds_k8)
+```
+
+```{r}
+as.data.frame(birds_k8$sign)
+```
+
+```{r}
+bird_summary_8 = indicator_species_stats(8, birds_k8)
+bird_summary_8
+```
+
+# Bird Final Results
+```{r}
+bind_rows(bird_summary_3, bird_summary_6, bird_summary_8)
+```
+
+Generalists
+```{r}
+birds_k8$sign[is.na(birds_k8$sign$p.value),]
+```
+
+```{r}
+summary(birds_k8)
 ```
