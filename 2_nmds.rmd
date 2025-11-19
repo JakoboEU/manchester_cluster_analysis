@@ -1,0 +1,94 @@
+---
+title: "NMDS of clusters"
+output: html_notebook
+---
+
+
+```{r}
+library(vegan)
+library(ggplot2)
+library(ggrepel)
+library(patchwork)
+library(gridExtra)
+library(grid)
+source("R/common.R", local = knitr::knit_global())
+
+NMDS_MAX_TRIES = 1000
+```
+
+```{r}
+plant_and_insect_clusters = read_input_csv('insect-plant-clusters.csv') %>% tranpose_cluster_df()
+bird_clusters = read_input_csv('bird-clusters.csv') %>% tranpose_cluster_df()
+```
+
+```{r}
+insects_per_site = read_input_csv('insect-presence.csv') %>% to_presence_dataframe() %>% include_sites_with_no_presence_record(plant_and_insect_clusters$title)
+plants_per_site = read_input_csv('plant-presence.csv') %>% to_presence_dataframe() %>% include_sites_with_no_presence_record(plant_and_insect_clusters$title)
+birds_per_site = read_input_csv('bird-presence.csv') %>% to_presence_dataframe() %>% include_sites_with_no_presence_record(bird_clusters$title)
+```
+
+
+# NMDS of insect species presence
+
+## Include everything
+```{r}
+create_nmds_df = function(per_site, exclusions = c()) {
+  per_site %>% filter(!(title %in% exclusions)) %>% tibble::column_to_rownames("title") %>% mutate_all(as.numeric)
+}
+
+set.seed(1245)
+
+insects_nmds_data = create_nmds_df(insects_per_site)
+insect_nmds = metaMDS(insects_nmds_data, distance = "jaccard", k = 2, trymax = NMDS_MAX_TRIES)
+
+nmds_site_scores_df = function(nmds, cluster_df = plant_and_insect_clusters) {
+  as.data.frame(scores(nmds, display = "sites")) %>% tibble::rownames_to_column('title') %>% left_join(cluster_df, by = 'title')
+}
+
+insect_site_scores = nmds_site_scores_df(insect_nmds)
+
+ggplot(data = insect_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('clusters=8, stress=', round(insect_nmds$stress, 3)))
+ggsave('output/insect_site_nmds.jpg')
+```
+
+# NMDS of plant species presence
+```{r}
+set.seed(1245)
+
+plant_nmds_data = create_nmds_df(plants_per_site, exclusions = c('663 6'))
+plant_nmds = metaMDS(plant_nmds_data, distance = "jaccard", k = 2, trymax = NMDS_MAX_TRIES)
+
+plant_site_scores = nmds_site_scores_df(plant_nmds)
+
+ggplot(data = plant_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Plant NMDS', subtitle = paste('clusters=8, excluded=663 6, stress=', round(plant_nmds$stress, 3)))
+ggsave('output/plant_site_nmds.jpg')
+```
+
+# NMDS of bird species presence
+```{r}
+set.seed(1245)
+
+bird_nmds_data = create_nmds_df(birds_per_site, exclusions = c('875 4'))
+bird_nmds = metaMDS(bird_nmds_data, distance = "jaccard", k = 2, trymax = NMDS_MAX_TRIES)
+
+bird_site_scores = nmds_site_scores_df(bird_nmds, bird_clusters)
+
+ggplot(data = bird_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Bird NMDS', subtitle=paste('clusters=9, excluded=875 4, stress=', round(bird_nmds$stress, 3)))
+ggsave('output/bird_site_nmds.jpg')
+```
+
