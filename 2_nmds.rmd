@@ -83,14 +83,14 @@ ggplot(data = insect2_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
   ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
-  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups, clusters=8, stress=', round(insect_nmds$stress, 3)))
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups, clusters=8, stress=', round(insect2_nmds$stress, 3)))
 
 ggplot(data = insect2_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
   geom_point(size = 1) +
   ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
-  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups, clusters=9, stress=', round(insect_nmds$stress, 3)))
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups, clusters=9, stress=', round(insect2_nmds$stress, 3)))
 ```
 
 
@@ -115,14 +115,14 @@ ggplot(data = insect3_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
   ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
-  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups and no generic bumblebee groups, clusters=8, stress=', round(insect_nmds$stress, 3)))
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups and no generic bumblebee groups, clusters=8, stress=', round(insect3_nmds$stress, 3)))
 
 ggplot(data = insect3_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
   geom_point(size = 1) +
   ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
-  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups and no generic bumblebee groups, clusters=9, stress=', round(insect_nmds$stress, 3)))
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups and no generic bumblebee groups, clusters=9, stress=', round(insect3_nmds$stress, 3)))
 ggsave('output/insect_no_non_species_site_nmds_9.jpg')
 ```
 
