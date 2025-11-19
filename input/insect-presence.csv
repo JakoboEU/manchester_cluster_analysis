@@ -1,5 +1,6 @@
 title,species
 389 2,Speckled_wood_butterfly
+485 12,Small_tortoiseshell_butterfly
 779 11,Speckled_wood_butterfly
 779 4,Western_honeybee
 876 2,Large_white_butterfly
@@ -17,6 +18,7 @@ title,species
 377 2,Western_honeybee
 377 3,Garden_bumblebee
 661 3,Tree_bumblebee
+661 3,Volucella_bombylans_hoverfly
 112 2,Buff_tailed_bumblebee
 108 4,Meadow_brown_butterfly
 203 6,Speckled_wood_butterfly
@@ -47,6 +49,7 @@ title,species
 989 1,Meadow_brown_butterfly
 989 1,Crane_fly
 990 9,Marmalade_hoverfly
+990 5,Small_tortoiseshell_butterfly
 990 5,Speckled_wood_butterfly
 990 5,Tree_bumblebee
 990 5,Western_honeybee
@@ -63,6 +66,7 @@ title,species
 248 9,Red_admiral_butterfly
 248 8,Western_honeybee
 343 6,Tree_bumblebee
+343 6,Common_carder_bumblebee
 342 6,Pied_hoverfly
 342 5,Garden_bumblebee
 342 5,Western_honeybee
@@ -104,6 +108,7 @@ title,species
 612 2,Buff_tailed_bumblebee
 612 2,Garden_bumblebee
 612 2,Tree_bumblebee
+612 2,Heath_bumblebee
 612 2,Western_honeybee
 612 8,Garden_bumblebee
 612 8,Western_honeybee
@@ -124,6 +129,7 @@ title,species
 231 12,Western_honeybee
 231 1,Buff_tailed_bumblebee
 231 1,White_tailed_bumblebee
+231 1,Common_carder_bumblebee
 231 1,Western_honeybee
 335 1,Western_honeybee
 906 4,Red_admiral_butterfly
@@ -134,6 +140,7 @@ title,species
 906 9,Tree_bumblebee
 906 9,Buff_tailed_bumblebee
 906 9,Western_honeybee
+906 8,Early_bumblebee
 906 8,Western_honeybee
 906 2,Common_wasp
 906 5,Crane_fly
@@ -142,6 +149,7 @@ title,species
 474 4,Common_wasp
 506 12,Common_wasp
 506 1,Common_wasp
+538 7,Early_bumblebee
 538 7,Common_wasp
 569 3,Common_wasp
 569 9,Common_wasp
@@ -149,16 +157,20 @@ title,species
 542 4,Tree_bumblebee
 542 9,Common_wasp
 654 6,Common_wasp
+654 5,Volucella_bombylans_hoverfly
 917 7,Marmalade_hoverfly
+917 5,Any_Blue_butterfly
 917 5,Common_wasp
 917 6,Tree_bumblebee
 917 6,Marmalade_hoverfly
 948 3,Speckled_wood_butterfly
 948 3,Large_white_butterfly
 948 9,Meadow_brown_butterfly
+948 9,Comma_butterfly
 948 8,Common_wasp
 948 7,Red_admiral_butterfly
 948 2,Marmalade_hoverfly
+948 4,Common_carder_bumblebee
 948 4,Common_wasp
 713 3,Common_wasp
 713 3,Western_honeybee
@@ -167,6 +179,7 @@ title,species
 776 9,Marmalade_hoverfly
 776 9,Western_honeybee
 776 11,Large_white_butterfly
+776 12,Common_carder_bumblebee
 566 4,Speckled_wood_butterfly
 547 11,Marmalade_hoverfly
 547 11,Western_honeybee
@@ -177,6 +190,7 @@ title,species
 547 2,Western_honeybee
 580 3,Meadow_brown_butterfly
 580 3,Red_tailed_bumblebee
+580 3,Early_bumblebee
 369 3,Tree_bumblebee
 369 3,Common_wasp
 420 8,Common_wasp

@@ -99,7 +99,7 @@ summary_3 = indicator_species_stats(3, insects_k3)
 summary_3
 ```
 
-# Insect Results
+## Insect Results
 ```{r}
 bind_rows(
   summary_3,
@@ -121,6 +121,50 @@ insects_k8$sign[is.na(insects_k8$sign$p.value),]
 
 ```{r}
 summary(insects_k8)
+```
+
+## Exclude Generic ANY_SPECIES groupings
+```{r}
+insects_no_generics_per_site = read_input_csv('insect-presence.csv') %>% 
+  filter(!(species %in% INSECT_GENERIC_EXCLUSIONS)) %>%
+  to_presence_dataframe() %>% 
+  include_sites_with_no_presence_record(plant_and_insect_clusters$title) %>% 
+  arrange(title)
+insects_no_generics_per_site_matrix = to_indicator_species_matrix(insects_no_generics_per_site)
+
+insects_no_generics_indicator_species = function(cluster_assignment) {indicator_species(insects_no_generics_per_site_matrix, cluster_assignment)}
+```
+```{r}
+bind_rows(
+  summary_3,
+  indicator_species_stats(6, insects_no_generics_indicator_species(plant_and_insect_clusters$`6`)),
+  indicator_species_stats(8, insects_no_generics_indicator_species(plant_and_insect_clusters$`8`)),
+  indicator_species_stats(9, insects_no_generics_indicator_species(plant_and_insect_clusters$`9`)),
+  indicator_species_stats(12, insects_no_generics_indicator_species(plant_and_insect_clusters$`12`)),
+  indicator_species_stats(15, insects_no_generics_indicator_species(plant_and_insect_clusters$`15`)))
+```
+
+## Exclude Generic Bumblebee groupings
+```{r}
+insects_no_bumblebee_generics_per_site = read_input_csv('insect-presence.csv') %>% 
+  filter(!(species %in% INSECT_GENERIC_EXCLUSIONS)) %>%
+  filter(!(species %in% BUMBLEBEE_GENERIC_EXCLUSIONS)) %>%
+  to_presence_dataframe() %>% 
+  include_sites_with_no_presence_record(plant_and_insect_clusters$title) %>% 
+  arrange(title)
+insects_no_bumblebee_generics_per_site_matrix = to_indicator_species_matrix(insects_no_bumblebee_generics_per_site)
+
+insects_no_bumblebee_generics_indicator_species = function(cluster_assignment) {indicator_species(insects_no_bumblebee_generics_per_site_matrix, cluster_assignment)}
+```
+
+```{r}
+bind_rows(
+  summary_3,
+  indicator_species_stats(6, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`6`)),
+  indicator_species_stats(8, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`8`)),
+  indicator_species_stats(9, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`9`)),
+  indicator_species_stats(12, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`12`)),
+  indicator_species_stats(15, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`15`)))
 ```
 
 # Plant Indicators

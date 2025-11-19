@@ -13,7 +13,7 @@ library(gridExtra)
 library(grid)
 source("R/common.R", local = knitr::knit_global())
 
-NMDS_MAX_TRIES = 1000
+NMDS_MAX_TRIES = 250
 ```
 
 ```{r}
@@ -22,9 +22,9 @@ bird_clusters = read_input_csv('bird-clusters.csv') %>% tranpose_cluster_df()
 ```
 
 ```{r}
-insects_per_site = read_input_csv('insect-presence.csv') %>% to_presence_dataframe() %>% include_sites_with_no_presence_record(plant_and_insect_clusters$title)
-plants_per_site = read_input_csv('plant-presence.csv') %>% to_presence_dataframe() %>% include_sites_with_no_presence_record(plant_and_insect_clusters$title)
-birds_per_site = read_input_csv('bird-presence.csv') %>% to_presence_dataframe() %>% include_sites_with_no_presence_record(bird_clusters$title)
+insects_per_site = read_input_csv('insect-presence.csv') %>% to_presence_dataframe()
+plants_per_site = read_input_csv('plant-presence.csv') %>% to_presence_dataframe()
+birds_per_site = read_input_csv('bird-presence.csv') %>% to_presence_dataframe()
 ```
 
 
@@ -53,8 +53,79 @@ ggplot(data = insect_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
   labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('clusters=8, stress=', round(insect_nmds$stress, 3)))
-ggsave('output/insect_site_nmds.jpg')
+ggsave('output/insect_site_nmds_8.jpg')
+
+ggplot(data = insect_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('clusters=9, stress=', round(insect_nmds$stress, 3)))
+ggsave('output/insect_site_nmds_9.jpg')
 ```
+## Exclude Generic ANY_SPECIES groupings
+```{r}
+insects_no_generics_per_site = read_input_csv('insect-presence.csv') %>% 
+  filter(!(species %in% INSECT_GENERIC_EXCLUSIONS)) %>%
+  to_presence_dataframe()
+```
+
+```{r}
+set.seed(1245)
+
+insects2_nmds_data = create_nmds_df(insects_no_generics_per_site)
+insect2_nmds = metaMDS(insects2_nmds_data, distance = "jaccard", k = 2, trymax = NMDS_MAX_TRIES)
+
+insect2_site_scores = nmds_site_scores_df(insect2_nmds)
+
+ggplot(data = insect2_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups, clusters=8, stress=', round(insect_nmds$stress, 3)))
+
+ggplot(data = insect2_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups, clusters=9, stress=', round(insect_nmds$stress, 3)))
+```
+
+
+## Exclude Generic Bumblebee groupings
+```{r}
+insects_no_bumblebee_generics_per_site = read_input_csv('insect-presence.csv') %>% 
+  filter(!(species %in% INSECT_GENERIC_EXCLUSIONS)) %>%
+  filter(!(species %in% BUMBLEBEE_GENERIC_EXCLUSIONS)) %>%
+  to_presence_dataframe()
+```
+
+```{r}
+set.seed(1245)
+
+insects3_nmds_data = create_nmds_df(insects_no_bumblebee_generics_per_site)
+insect3_nmds = metaMDS(insects3_nmds_data, distance = "jaccard", k = 2, trymax = NMDS_MAX_TRIES)
+
+insect3_site_scores = nmds_site_scores_df(insect3_nmds)
+
+ggplot(data = insect3_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups and no generic bumblebee groups, clusters=8, stress=', round(insect_nmds$stress, 3)))
+
+ggplot(data = insect3_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Insect NMDS', subtitle = paste('no generic taxa groups and no generic bumblebee groups, clusters=9, stress=', round(insect_nmds$stress, 3)))
+ggsave('output/insect_no_non_species_site_nmds_9.jpg')
+```
+
 
 # NMDS of plant species presence
 ```{r}
@@ -71,7 +142,15 @@ ggplot(data = plant_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`8`))) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
   labs(colour = "cluster", title = 'Plant NMDS', subtitle = paste('clusters=8, excluded=663 6, stress=', round(plant_nmds$stress, 3)))
-ggsave('output/plant_site_nmds.jpg')
+ggsave('output/plant_site_nmds_8.jpg')
+
+ggplot(data = plant_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
+  geom_point(size = 1) +
+  ggforce::geom_mark_hull(concavity = 5, expand=0, radius=0) +
+  theme_minimal() +
+  theme(text = element_text(size = 8)) +
+  labs(colour = "cluster", title = 'Plant NMDS', subtitle = paste('clusters=9, excluded=663 6, stress=', round(plant_nmds$stress, 3)))
+ggsave('output/plant_site_nmds_9.jpg')
 ```
 
 # NMDS of bird species presence
@@ -89,6 +168,6 @@ ggplot(data = bird_site_scores, aes(NMDS1, NMDS2, colour = as.factor(`9`))) +
   theme_minimal() +
   theme(text = element_text(size = 8)) +
   labs(colour = "cluster", title = 'Bird NMDS', subtitle=paste('clusters=9, excluded=875 4, stress=', round(bird_nmds$stress, 3)))
-ggsave('output/bird_site_nmds.jpg')
+ggsave('output/bird_site_nmds_9.jpg')
 ```
 

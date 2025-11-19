@@ -4,6 +4,9 @@ library(tidyverse)
 LINES_TO_GUESS_TYPES = 1000
 INPUT_DIR = 'input'
 
+INSECT_GENERIC_EXCLUSIONS = c('Any_Butterfly', 'Any_Bumblebee', 'Any_Hoverfly')
+BUMBLEBEE_GENERIC_EXCLUSIONS = c('Any_White_tailed_bumblebee', 'Any_Red_tailed_bumblebee')
+
 read_input_csv = function(filename) {
   read_csv(paste(INPUT_DIR, filename, sep = '/'), guess_max = LINES_TO_GUESS_TYPES, show_col_types = FALSE)
 }
