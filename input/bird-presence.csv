@@ -42,6 +42,7 @@ title,species
 485 5,Woodpigeon
 485 1,Goldfinch
 485 1,Blue_tit
+485 1,Coal_tit
 485 1,Great_tit
 485 1,Crow
 485 1,Magpie
@@ -98,6 +99,7 @@ title,species
 876 4,Woodpigeon
 876 4,Feral_pigeon
 876 1,Robin
+876 1,Coal_tit
 876 1,Magpie
 876 6,Magpie
 876 8,Magpie
@@ -828,6 +830,7 @@ title,species
 1004 12,Blackbird
 1004 12,Song_thrush
 1004 12,Goldfinch
+1004 12,Coal_tit
 1004 12,Long-tailed_tit
 1004 12,Magpie
 1004 12,Woodpigeon
@@ -1118,12 +1121,14 @@ title,species
 295 6,Robin
 295 6,Wren
 295 6,Chiffchaff
+295 6,Willow_warbler
 295 6,Great_tit
 295 6,Magpie
 295 1,Wren
 295 1,Blackbird
 295 1,Robin
 295 1,Chiffchaff
+295 1,Willow_warbler
 295 1,Blue_tit
 231 3,Wren
 231 3,Blackbird
@@ -1382,6 +1387,7 @@ title,species
 569 8,Robin
 569 8,Song_thrush
 569 8,Goldfinch
+569 8,Bulfinch
 569 8,Woodpigeon
 569 3,Wren
 569 3,Blackbird
@@ -1492,6 +1498,7 @@ title,species
 917 6,Blackbird
 917 6,Robin
 917 6,Long-tailed_tit
+917 6,Coal_tit
 917 6,Magpie
 917 6,Crow
 917 6,Woodpigeon
@@ -1729,6 +1736,7 @@ title,species
 421 6,Jackdaw
 421 6,Feral_pigeon
 421 6,Woodpigeon
+792 3,Mistle_thrush
 792 3,Goldfinch
 792 3,Crow
 792 3,Woodpigeon

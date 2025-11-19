@@ -95,6 +95,9 @@ indicator_species_stats = function(k, indicator_results) {
     average_p_value = mean(indicator_results$sign$p.value, na.rm = T)
   )
 }
+```
+
+```{r}
 summary_3 = indicator_species_stats(3, insects_k3)
 summary_3
 ```
@@ -134,6 +137,7 @@ insects_no_generics_per_site_matrix = to_indicator_species_matrix(insects_no_gen
 
 insects_no_generics_indicator_species = function(cluster_assignment) {indicator_species(insects_no_generics_per_site_matrix, cluster_assignment)}
 ```
+
 ```{r}
 bind_rows(
   summary_3,
