@@ -231,7 +231,7 @@ bind_rows(
 ```
 
 ```{r}
-birds_k9 = plant_indicator_species(bird_clusters$`9`)
+birds_k9 = bird_indicator_species(bird_clusters$`9`)
 ```
 
 Generalists
