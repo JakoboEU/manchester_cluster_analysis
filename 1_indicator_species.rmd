@@ -114,16 +114,20 @@ bind_rows(
 ```
 
 ```{r}
-insects_k8 = insect_indicator_species(plant_and_insect_clusters$`8`)
+insects_k9 = insect_indicator_species(plant_and_insect_clusters$`9`)
 ```
 
 Generalists
 ```{r}
-insects_k8$sign[is.na(insects_k8$sign$p.value),]
+insects_k9$sign[is.na(insects_k9$sign$p.value),]
 ```
 
 ```{r}
-summary(insects_k8)
+summary(insects_k9)
+```
+
+```{r}
+write_csv(insects_k9$sign, 'output/insect_indicator_species_9.csv')
 ```
 
 ## Exclude Generic ANY_SPECIES groupings
@@ -162,13 +166,17 @@ insects_no_bumblebee_generics_indicator_species = function(cluster_assignment) {
 ```
 
 ```{r}
+insects_species_only_k9 = insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`9`)
+
 bind_rows(
   summary_3,
   indicator_species_stats(6, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`6`)),
   indicator_species_stats(8, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`8`)),
-  indicator_species_stats(9, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`9`)),
+  indicator_species_stats(9, insects_species_only_k9),
   indicator_species_stats(12, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`12`)),
   indicator_species_stats(15, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`15`)))
+
+write_csv(insects_species_only_k9$sign, 'output/insect_no_non_species_indicator_species_9.csv')
 ```
 
 # Plant Indicators
@@ -183,16 +191,20 @@ bind_rows(
 ```
 
 ```{r}
-plants_k8 = plant_indicator_species(plant_and_insect_clusters$`8`)
+plants_k9 = plant_indicator_species(plant_and_insect_clusters$`9`)
 ```
 
 Generalists
 ```{r}
-plants_k8$sign[is.na(plants_k8$sign$p.value),]
+plants_k9$sign[is.na(plants_k9$sign$p.value),]
 ```
 
 ```{r}
-summary(plants_k8)
+summary(plants_k9)
+```
+
+```{r}
+write_csv(plants_k9$sign, 'output/plant_indicator_species_9.csv')
 ```
 
 # Bird Indicators
@@ -219,4 +231,8 @@ birds_k9$sign[is.na(birds_k9$sign$p.value),]
 
 ```{r}
 summary(birds_k9)
+```
+
+```{r}
+write_csv(birds_k9$sign, 'output/bird_indicator_species_9.csv')
 ```
