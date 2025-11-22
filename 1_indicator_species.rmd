@@ -103,7 +103,7 @@ summary_3
 ```
 
 ## Insect Results
-```{r}
+```{r, eval=F}
 bind_rows(
   summary_3,
   indicator_species_stats(6, insect_indicator_species(plant_and_insect_clusters$`6`)),
@@ -113,6 +113,7 @@ bind_rows(
   indicator_species_stats(15, insect_indicator_species(plant_and_insect_clusters$`15`)))
 ```
 
+## k = 9
 ```{r}
 insects_k9 = insect_indicator_species(plant_and_insect_clusters$`9`)
 ```
@@ -125,9 +126,14 @@ insects_k9$sign[is.na(insects_k9$sign$p.value),]
 ```{r}
 summary(insects_k9)
 ```
+```{r}
+write_indicator_species_result = function(ind, filename) {
+  write_csv(ind$sign %>% tibble::rownames_to_column('species'), paste('output', filename, sep = '/'))
+}
+```
 
 ```{r}
-write_csv(insects_k9$sign, 'output/insect_indicator_species_9.csv')
+write_indicator_species_result(insects_k9, 'insect_indicator_species_9.csv')
 ```
 
 ## Exclude Generic ANY_SPECIES groupings
@@ -142,7 +148,7 @@ insects_no_generics_per_site_matrix = to_indicator_species_matrix(insects_no_gen
 insects_no_generics_indicator_species = function(cluster_assignment) {indicator_species(insects_no_generics_per_site_matrix, cluster_assignment)}
 ```
 
-```{r}
+```{r, eval = F}
 bind_rows(
   summary_3,
   indicator_species_stats(6, insects_no_generics_indicator_species(plant_and_insect_clusters$`6`)),
@@ -165,22 +171,25 @@ insects_no_bumblebee_generics_per_site_matrix = to_indicator_species_matrix(inse
 insects_no_bumblebee_generics_indicator_species = function(cluster_assignment) {indicator_species(insects_no_bumblebee_generics_per_site_matrix, cluster_assignment)}
 ```
 
-```{r}
-insects_species_only_k9 = insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`9`)
-
+```{r, eval = F}
 bind_rows(
   summary_3,
   indicator_species_stats(6, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`6`)),
   indicator_species_stats(8, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`8`)),
-  indicator_species_stats(9, insects_species_only_k9),
+  indicator_species_stats(9, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`9`)),
   indicator_species_stats(12, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`12`)),
   indicator_species_stats(15, insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`15`)))
-
-write_csv(insects_species_only_k9$sign, 'output/insect_no_non_species_indicator_species_9.csv')
 ```
 
-# Plant Indicators
+## k = 9
 ```{r}
+insects_species_only_k9 = insects_no_bumblebee_generics_indicator_species(plant_and_insect_clusters$`9`)
+write_indicator_species_result(insects_species_only_k9, 'insect_no_non_species_indicator_species_9.csv')
+```
+
+
+# Plant Indicators
+```{r, eval = F}
 bind_rows(
   indicator_species_stats(3, plant_indicator_species(plant_and_insect_clusters$`3`)),
   indicator_species_stats(6, plant_indicator_species(plant_and_insect_clusters$`6`)),
@@ -190,6 +199,7 @@ bind_rows(
   indicator_species_stats(15, plant_indicator_species(plant_and_insect_clusters$`15`)))
 ```
 
+## k = 9
 ```{r}
 plants_k9 = plant_indicator_species(plant_and_insect_clusters$`9`)
 ```
@@ -204,11 +214,11 @@ summary(plants_k9)
 ```
 
 ```{r}
-write_csv(plants_k9$sign, 'output/plant_indicator_species_9.csv')
+write_indicator_species_result(plants_k9, 'plant_indicator_species_9.csv')
 ```
 
 # Bird Indicators
-```{r}
+```{r, eval = F}
 bind_rows(
   indicator_species_stats(3, bird_indicator_species(bird_clusters$`3`)), 
   indicator_species_stats(4, bird_indicator_species(bird_clusters$`4`)), 
@@ -234,5 +244,5 @@ summary(birds_k9)
 ```
 
 ```{r}
-write_csv(birds_k9$sign, 'output/bird_indicator_species_9.csv')
+write_indicator_species_result(birds_k9, 'bird_indicator_species_9.csv')
 ```
